@@ -1,0 +1,25 @@
+version: '2'
+
+services:
+  db:
+    image: postgres
+    env_file: .env
+  web:
+    image: ${REPO}
+    env_file: .env
+    links:
+      - db
+<%if ( useCelery === true ) { %>
+  rabbit:
+    image: rabbitmq
+    env_file: .env
+  redis:
+    image: redis
+    env_file: .env
+  worker:
+    image: ${REPO}
+    env_file: .env
+    links:
+      - rabbit
+      - redis
+<% } %>

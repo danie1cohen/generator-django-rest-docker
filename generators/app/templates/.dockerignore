@@ -1,0 +1,25 @@
+# temporary/secure
+.env
+backup
+
+# ignore git files, except head which we use to check release version
+.git/*
+!.git/HEAD
+!.git/refs/heads/master
+
+# ignore dev-ops type files
+.vagrant
+cover
+.coverage
+README.md
+fabfile.py
+todo.yml
+Vagrantfile
+db.sqlite3
+playbook
+notebooks
+
+# ignore text files
+*.txt
+*.csv
+*.xls*
