@@ -205,4 +205,61 @@ CELERYD_HIJACK_ROOT_LOGGER = False
 <% } %>
 
 <% if ( useLdap == true ) { %>
+
+#########################################
+# LDAP Oh Yeah, Big Time with that LDAP #
+#########################################
+
+import ldap
+from django_auth_ldap.config import LDAPSearch, ActiveDirectoryGroupType
+
+AUTH_LDAP_SERVER_URI = os.environ.get('LDAP_SERVER_URI')
+AUTH_LDAP_BIND_DN = os.environ.get('LDAP_BIND_USER')
+AUTH_LDAP_BIND_PASSWORD = os.environ.get('LDAP_BIND_PWD')
+
+AUTH_LDAP_GLOBAL_OPTIONS = {
+    ldap.OPT_X_TLS_REQUIRE_CERT: bool(os.environ.get('LDAP_OPT_X_TLS_REQUIRE_CERT')),
+    ldap.OPT_X_TLS: bool(os.environ.get('LDAP_OPT_X_TLS')),
+    ldap.OPT_X_TLS_DEMAND: bool(os.environ.get('LDAP_X_TLS_DEMAND')),
+    ldap.OPT_X_TLS_CACERTDIR: os.environ.get('LDAP_OPT_X_TLS_CACERTDIR'),
+}
+
+AUTH_LDAP_USER_SEARCH = LDAPSearch(
+    'cn=users,dc=usccreditunion,dc=org',
+    ldap.SCOPE_SUBTREE,
+    '(sAMAccountName=%(user)s)',
+)
+
+AUTH_LDAP_USER_ATTR_MAP = {
+    'name': 'cn',
+    'email': 'mail',
+    'first_name': 'givenName',
+    'last_name': 'sn',
+}
+
+AUTH_LDAP_GROUP_SEARCH = LDAPSearch(
+    'ou=groups,dc=usccreditunion,dc=org',
+    ldap.SCOPE_SUBTREE,
+    '(objectClass=group)'
+)
+
+AUTH_LDAP_GROUP_TYPE = ActiveDirectoryGroupType(name_attr='cn')
+AUTH_LDAP_REQUIRE_GROUP = os.environ.get('LDAP_REQUIRE_GROUP')
+AUTH_LDAP_DENY_GROUP = os.environ.get('LDAP_DENY_GROUP')
+
+AUTH_LDAP_USER_FLAGS_BY_GROUP = {
+    "is_active": os.environ.get('LDAP_USER_FLAG_GROUP_ACTIVE'),
+    "is_staff": os.environ.get('LDAP_USER_FLAG_GROUP_STAFF'),
+    "is_superuser": os.environ.get('LDAP_USER_FLAG_GROUP_SUPERUSER'),
+}
+
+# Cache group memberships for an hour to minimize LDAP traffic
+AUTH_LDAP_CACHE_GROUPS = True
+AUTH_LDAP_GROUP_CACHE_TIMEOUT = 3600
+
+AUTHENTICATION_BACKENDS = [
+    'django_auth_ldap.backend.LDAPBackend',
+    'django.contrib.auth.backends.ModelBackend',
+]
+
 <% } %>
