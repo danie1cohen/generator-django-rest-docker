@@ -171,7 +171,7 @@ SENTRY_DSN = os.environ.get('SENTRY_DSN')
 LOGGING['handlers']['sentry_handler']['dsn'] = SENTRY_DSN
 
 RAVEN_CONFIG = {
-    'dsn': SENTRY_DSN
+    'dsn': SENTRY_DSN,
     # If you are using git, you can also automatically configure the
     # release based on the git info.
     'release': raven.fetch_git_sha(os.path.dirname(os.pardir)),
