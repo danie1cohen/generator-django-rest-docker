@@ -62,6 +62,7 @@ module.exports = class extends Generator {
       'projectName/wsgi.py',
       '.env',
       'Dockerfile',
+      'entrypoint.sh',
       'logging.yml',
       'manage.py',
       'README.md',

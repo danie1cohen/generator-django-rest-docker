@@ -2,13 +2,15 @@ coverage==4.2
 cryptography==2.0.3
 dj-database-url==0.4.1
 Django==1.10
+<% if ( useLdap === true ) { %>django-auth-ldap==1.2.15<% } %>
 django-filter==1.0.4
 django-nose==1.4.4
 djangorestframework==3.6.4
 gunicorn==19.6.0
 Markdown==2.6.9
 psycopg2==2.6.2
+<% if ( useLdap === true ) { %>pyldap==2.4.37<% } %>
 PyYAML==3.12
 <% if ( useSentry === true ) { %>raven==6.1.0<% } %>
-<% if ( useCelery === true ) { %>redis<% } %>
+<% if ( useCelery === true ) { %>redis==2.10.6<% } %>
 whitenoise==3.2
