@@ -1,0 +1,63 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+
+  config.vm.box = "williamyeh/ubuntu-trusty64-docker"
+
+  config.ssh.forward_agent = true
+
+  config.vm.network :forwarded_port, guest:22, host: 2213, id: 'ssh'
+
+  config.vm.provider "virtualbox" do |vb|
+    vb.memory = "1024"
+  end
+
+  config.vm.provision :shell, inline: <<-SHELL
+    apt-get update
+
+    # python
+    apt-get install -y vim build-essential python-dev python-pip  python-virtualenv
+
+    # crypto
+    apt-get install -y libffi-dev libssl-dev
+
+    # postgres
+    apt-get install -y libpq-dev
+
+<% if ( useLdap === true ) {  %>
+    # ldap
+    apt-get install -y libsasl2-dev libldap2-dev
+<% } %>
+
+    pip install -U setuptools pip
+    pip install enum34 ipaddress six
+    pip install ansible==2.3.2
+
+    # python 3.6
+    apt-get install -y software-properties-common
+    add-apt-repository ppa:jonathonf/python-3.6 -y
+    apt-get update
+    apt-get install -y python3.6 python3.6-dev python3-pip
+
+    # set up virtual environment
+    pip3 install virtualenvwrapper
+    export VIRTUALENVWRAPPER_PYTHON=$(which python3) && export WORKON_HOME=/home/vagrant/.virtualenvs/ && source virtualenvwrapper.sh &&  mkvirtualenv <%= projectName %> -p $(which python3.6) && pip install -r /vagrant/requirements.txt
+    sudo chown -R vagrant /home/vagrant /vagrant
+
+    echo "find /home/vagrant/.vault -exec rm {} \\;" > /home/vagrant/.bash_logout
+    echo "find /vagrant/playbook -name \"*.retry\" -exec rm {} \\;" >> /home/vagrant/.bash_logout
+    echo "export REPO=registry.usccreditunion.org/<%= projectName %>" > /home/vagrant/.profile
+
+    echo 'alias build="docker build /vagrant -t \$REPO"' >> /home/vagrant/.profile
+    echo 'manage() { \$WORKON_HOME/<%= projectName %>/bin/python /vagrant/manage.py $@; }' >> /home/vagrant/.profile
+    echo 'alias runserver="manage runserserver 0.0.0.0:9000"' >> /home/vagrant/.profile
+    echo 'alias test="manage test --noinput"' >> /home/vagrant/.profile
+
+    # environment activation
+    echo "source virtualenvwrapper.sh" >> /home/vagrant/.profile
+    echo "workon <%= projectName %>" >> /home/vagrant/.profile
+    echo "cd /vagrant" >> /home/vagrant/.profile
+  SHELL
+
+end
