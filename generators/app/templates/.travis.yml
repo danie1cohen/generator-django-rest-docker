@@ -13,6 +13,11 @@ addons:
 <% } %>
   ssh_known_hosts: []
 
+
+env:
+  global:
+  - REPO=<%= projectName %>
+
 before_install:
 - pip install -U setuptools pip
 
@@ -24,7 +29,14 @@ before_deploy:
 - echo "deb https://apt.dockerproject.org/repo ubuntu-precise main" | sudo tee /etc/apt/sources.list.d/docker.list
 - sudo apt-get update
 - sudo apt-get install docker-engine
-- sudo docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD" registry.usccreditunion.org
+- sudo docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
 - sudo docker pull $REPO:latest
 - sudo docker build . -t $REPO:v$TRAVIS_BUILD_NUMBER --cache-from $REPO
 - sudo docker tag $REPO:v$TRAVIS_BUILD_NUMBER $REPO:latest
+
+deploy:
+- provider: script
+  skip_cleanup: true
+  script: sudo docker push $REPO
+  on:
+    branch: master
