@@ -60,6 +60,7 @@ module.exports = class extends Generator {
       'projectName/settings.py',
       'projectName/urls.py',
       'projectName/wsgi.py',
+      '.coveragerc.',
       '.env',
       'Dockerfile',
       'entrypoint.sh',

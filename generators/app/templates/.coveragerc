@@ -1,0 +1,19 @@
+[run]
+branch = True
+
+[paths]
+source =
+    <%= projectName %>
+
+[report]
+fail_under = 47
+
+exclude_lines =
+    def __repr__
+    def __str__
+
+include =
+    <%= projectName %>./*
+
+[html]
+directory = cover

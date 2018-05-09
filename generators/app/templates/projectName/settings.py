@@ -148,17 +148,10 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
 
 NOSE_ARGS = (
-    '--cover-branches',
-    '--cover-erase',
-    '--cover-html',
-    '--cover-html-dir=cover',
-    '--cover-min-percentage=75',
-    '--cover-package=<%= projectName %>',
     '--exe',
     '--logging-clear-handlers',
     '--stop',
     '--verbosity=2',
-    '--with-coverage',
 )
 
 #########################
