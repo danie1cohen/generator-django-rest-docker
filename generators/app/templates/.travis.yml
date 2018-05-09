@@ -1,0 +1,30 @@
+language: python
+python:
+- '3.6'
+cache: pip
+addons:
+  apt:
+    packages:
+    - libffi-dev
+    - libssl-dev
+<% if ( useLdap == true ) { %>
+    - libsasl2-dev
+    - libldap2-dev
+<% } %>
+  ssh_known_hosts: []
+
+before_install:
+- pip install -U setuptools pip
+
+script: coverage run ./manage.py test; coverage report
+
+before_deploy:
+# docker deployment
+- sudo apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D
+- echo "deb https://apt.dockerproject.org/repo ubuntu-precise main" | sudo tee /etc/apt/sources.list.d/docker.list
+- sudo apt-get update
+- sudo apt-get install docker-engine
+- sudo docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD" registry.usccreditunion.org
+- sudo docker pull $REPO:latest
+- sudo docker build . -t $REPO:v$TRAVIS_BUILD_NUMBER --cache-from $REPO
+- sudo docker tag $REPO:v$TRAVIS_BUILD_NUMBER $REPO:latest
