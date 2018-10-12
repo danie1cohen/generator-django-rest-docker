@@ -6,7 +6,7 @@ source =
     <%= projectName %>
 
 [report]
-fail_under = 47
+fail_under = 50
 
 exclude_lines =
     def __repr__
@@ -14,6 +14,10 @@ exclude_lines =
 
 include =
     <%= projectName %>./*
+
+omit =
+    **/tests/**
+    **/migrations/**
 
 [html]
 directory = cover
