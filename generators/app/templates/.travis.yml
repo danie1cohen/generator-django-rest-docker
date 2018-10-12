@@ -21,7 +21,10 @@ env:
 before_install:
 - pip install -U setuptools pip
 
-script: coverage run ./manage.py test; coverage report
+script: coverage run ./manage.py test
+
+after_success:
+- coverage report
 
 before_deploy:
 # docker deployment
