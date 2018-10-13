@@ -69,9 +69,9 @@ module.exports = class extends Generator {
       'manage.py',
       'README.md',
       'requirements.txt',
-      'Vagrantfile',
+      'Vagrantfile'
     ];
-    
+
     if (this.props.createDockerCompose === true) {
       files.push('docker-compose.yml');
     }
@@ -94,6 +94,6 @@ module.exports = class extends Generator {
   }
 
   install() {
-    //this.installDependencies();
+    // This.installDependencies();
   }
 };
