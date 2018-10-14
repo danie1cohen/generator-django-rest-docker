@@ -7,7 +7,7 @@ module.exports = class extends Generator {
   prompting() {
     // Have Yeoman greet the user.
     this.log(yosay(
-      'Welcome to the impeccable ' + chalk.red('generator-django-rest-docker') + ' generator!'
+      'Welcome to the impeccable ' + chalk.red('Django Rest Docker') + ' generator!'
     ));
 
     const prompts = [{
@@ -60,7 +60,7 @@ module.exports = class extends Generator {
       'projectName/settings.py',
       'projectName/urls.py',
       'projectName/wsgi.py',
-      '.coveragerc.',
+      '.coveragerc',
       '.env',
       '.travis.yml',
       'Dockerfile',
@@ -69,8 +69,9 @@ module.exports = class extends Generator {
       'manage.py',
       'README.md',
       'requirements.txt',
-      'Vagrantfile',
+      'Vagrantfile'
     ];
+
     if (this.props.createDockerCompose === true) {
       files.push('docker-compose.yml');
     }
@@ -93,6 +94,6 @@ module.exports = class extends Generator {
   }
 
   install() {
-    //this.installDependencies();
+    // This.installDependencies();
   }
 };
